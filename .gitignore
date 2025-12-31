@@ -1,0 +1,9 @@
+# Large files
+*.exe
+*.mp4
+*.zip
+
+# Folders to ignore
+node_modules/
+zula_travels/
+backend/admin/build/

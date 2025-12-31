@@ -1,0 +1,174 @@
+.venues-page {
+  font-family: "Poppins", sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+  padding-bottom: 40px;
+}
+
+/* Hero Section */
+.venues-hero {
+  position: relative;
+  height: 70vh;
+  background: url("../assets/images/events/hero-bg.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.venues-hero .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 20px;
+}
+
+.hero-content h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Venue Categories */
+.venue-types {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.venue-types h2 {
+  color: #0ea66a;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.venue-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.venue-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.venue-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.venue-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.venue-card .venue-content {
+  padding: 20px;
+}
+
+.venue-card h3 {
+  margin-bottom: 8px;
+  color: #0ea66a;
+}
+
+.venue-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #fff;
+  color: #0ea66a;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+/* Buttons */
+.btn-book {
+  background-color: #0ea66a;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-book:hover {
+  background-color: #056e45;
+}
+
+/* CTA Section */
+.venue-cta {
+  text-align: center;
+  background: linear-gradient(120deg, #0ea66a, #024b2a);
+  color: #fff;
+  padding: 70px 20px;
+  border-radius: 12px;
+  margin: 40px auto 0;
+  max-width: 1100px;
+}
+
+.venue-cta h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.venue-cta p {
+  max-width: 800px;
+  margin: 0 auto 25px;
+  line-height: 1.6;
+}
+
+.btn-contact {
+  background: #fff;
+  color: #0ea66a;
+  padding: 12px 28px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-contact:hover {
+  background: #024b2a;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  .venue-card img {
+    height: 150px;
+  }
+}

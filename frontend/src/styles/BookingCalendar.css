@@ -1,0 +1,287 @@
+/* Booking Calendar Styles */
+.booking-calendar {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 30px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.booking-calendar:hover {
+  border-color: var(--primary-green);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Compact Version */
+.booking-calendar.compact {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.booking-calendar.compact .booking-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+/* Booking Header */
+.booking-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.booking-header h3 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--text-light);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.booking-header p {
+  color: var(--text-mid);
+  font-size: 1.1rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Expanded Form */
+.booking-form.expanded .form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  align-items: end;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 5px;
+}
+
+.input-icon {
+  color: var(--primary-green);
+  font-size: 0.9rem;
+}
+
+/* Input Styles */
+.form-group input,
+.form-group select {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: var(--text-light);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  width: 100%;
+}
+
+.form-group input::placeholder {
+  color: var(--text-mid);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 148, 102, 0.2);
+}
+
+/* Date Input Styling */
+.form-group input[type="date"] {
+  position: relative;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* Select Styling */
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230d9466'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 45px;
+}
+
+/* Search Button */
+.btn-search {
+  background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+  color: var(--text-light);
+  border: none;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: fit-content;
+  min-height: 52px;
+}
+
+.btn-search:hover {
+  background: linear-gradient(135deg, var(--primary-green-dark), var(--primary-green));
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(13, 148, 102, 0.4);
+}
+
+.btn-search:active {
+  transform: translateY(-1px);
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .booking-form.expanded .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .btn-search {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-calendar {
+    padding: 25px;
+  }
+  
+  .booking-header h3 {
+    font-size: 1.7rem;
+  }
+  
+  .booking-header p {
+    font-size: 1rem;
+  }
+  
+  .booking-calendar.compact .booking-form {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .booking-form.expanded .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 12px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-calendar {
+    padding: 20px;
+    border-radius: 15px;
+  }
+  
+  .booking-header h3 {
+    font-size: 1.5rem;
+  }
+  
+  .btn-search {
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+}
+
+/* Animation for form elements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.booking-calendar {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Focus states for accessibility */
+.form-group input:focus,
+.form-group select:focus {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar for select */
+.form-group select::-webkit-scrollbar {
+  width: 8px;
+}
+
+.form-group select::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.form-group select::-webkit-scrollbar-thumb {
+  background: var(--primary-green);
+  border-radius: 4px;
+}
+
+.form-group select::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green-dark);
+}
+
+/* Loading state for search button */
+.btn-search:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-search:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Success state animation */
+@keyframes successPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(13, 148, 102, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(13, 148, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(13, 148, 102, 0);
+  }
+}
+
+.btn-search.success {
+  animation: successPulse 1s;
+}

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 31, 2025 at 06:45 PM
+-- Generation Time: Jan 06, 2026 at 10:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -42,6 +42,22 @@ CREATE TABLE `bookings` (
 
 INSERT INTO `bookings` (`id`, `user_id`, `booking_date`, `status`, `total_amount`, `currency`) VALUES
 (1, 1, '2025-12-18 14:50:59', 'pending', 450.00, 'USD');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_audit`
+--
+
+CREATE TABLE `booking_audit` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `table_name` varchar(50) DEFAULT NULL,
+  `old_status` varchar(50) DEFAULT NULL,
+  `new_status` varchar(50) DEFAULT NULL,
+  `changed_by` int(11) DEFAULT NULL,
+  `change_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -85,19 +101,27 @@ CREATE TABLE `cars` (
   `description` text DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `is_available` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `category` varchar(50) DEFAULT 'SUV',
+  `base_rate_per_day` decimal(10,2) DEFAULT 50.00,
+  `available_quantity` int(11) DEFAULT 1,
+  `fuel_type` varchar(20) DEFAULT 'Petrol',
+  `engine_capacity` varchar(20) DEFAULT NULL,
+  `features` text DEFAULT NULL,
+  `driver_included` tinyint(1) DEFAULT 0,
+  `daily_rate_with_driver` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `cars`
 --
 
-INSERT INTO `cars` (`id`, `destination_id`, `make`, `model`, `plate_number`, `year`, `seating_capacity`, `transmission`, `description`, `image_url`, `is_available`, `created_at`) VALUES
-(1, 1, 'Toyota', 'Land Cruiser Prado', NULL, 2022, 7, 'manual', '4x4 safari vehicle suitable for long tours', NULL, 1, '2025-12-31 12:38:28'),
-(2, 1, 'Toyota', 'RAV4', NULL, 2021, 5, 'manual', 'Comfortable SUV for city and highway travel', NULL, 1, '2025-12-31 12:38:28'),
-(3, 2, 'Toyota', 'Hiace Van', NULL, 2020, 14, 'manual', 'Tour van ideal for groups and airport transfers', NULL, 1, '2025-12-31 12:38:28'),
-(4, 3, 'Nissan', 'X-Trail', NULL, 2019, 5, 'manual', 'Reliable mid-size SUV', NULL, 1, '2025-12-31 12:38:28'),
-(5, 4, 'Toyota', 'Coaster Bus', NULL, 2018, 29, 'manual', 'Large bus for group tours and conferences', NULL, 1, '2025-12-31 12:38:28');
+INSERT INTO `cars` (`id`, `destination_id`, `make`, `model`, `plate_number`, `year`, `seating_capacity`, `transmission`, `description`, `image_url`, `is_available`, `created_at`, `category`, `base_rate_per_day`, `available_quantity`, `fuel_type`, `engine_capacity`, `features`, `driver_included`, `daily_rate_with_driver`) VALUES
+(1, 1, 'Toyota', 'Land Cruiser Prado', NULL, 2022, 7, 'manual', '4x4 safari vehicle suitable for long tours', '/assets/cars/prado.jpg', 1, '2025-12-31 12:38:28', 'SUV', 120.00, 1, 'Diesel', NULL, NULL, 0, NULL),
+(2, 1, 'Toyota', 'RAV4', NULL, 2021, 5, 'manual', 'Comfortable SUV for city and highway travel', '/assets/cars/rav4.jpg', 1, '2025-12-31 12:38:28', 'Sedan', 80.00, 1, 'Diesel', NULL, NULL, 0, NULL),
+(3, 2, 'Toyota', 'Hiace Van', NULL, 2020, 14, 'manual', 'Tour van ideal for groups and airport transfers', '/assets/cars/hiace.jpg', 1, '2025-12-31 12:38:28', 'Van', 150.00, 1, 'Diesel', NULL, NULL, 0, NULL),
+(4, 3, 'Nissan', 'X-Trail', NULL, 2019, 5, 'manual', 'Reliable mid-size SUV', '/assets/cars/xtrail.jpg', 1, '2025-12-31 12:38:28', 'Sedan', 90.00, 1, 'Diesel', NULL, NULL, 0, NULL),
+(5, 4, 'Toyota', 'Coaster Bus', NULL, 2018, 29, 'manual', 'Large bus for group tours and conferences', '/assets/cars/coaster.jpg', 1, '2025-12-31 12:38:28', 'Van', 220.00, 1, 'Diesel', NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -157,6 +181,128 @@ INSERT INTO `car_hire_rates` (`id`, `car_id`, `base_rate_per_day`, `currency`, `
 (3, 3, 150.00, 'USD', 1),
 (4, 4, 90.00, 'USD', 1),
 (5, 5, 220.00, 'USD', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courier_bookings`
+--
+
+CREATE TABLE `courier_bookings` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `driver_id` int(11) DEFAULT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `pickup_address` text NOT NULL,
+  `dropoff_address` text NOT NULL,
+  `pickup_coords` varchar(100) DEFAULT NULL,
+  `dropoff_coords` varchar(100) DEFAULT NULL,
+  `is_surprise` tinyint(1) DEFAULT 0,
+  `receiver_name` varchar(255) DEFAULT NULL,
+  `receiver_phone` varchar(20) DEFAULT NULL,
+  `special_instructions` text DEFAULT NULL,
+  `parcel_items` varchar(255) DEFAULT NULL,
+  `estimated_distance_km` decimal(6,2) DEFAULT NULL,
+  `estimated_delivery_time` datetime DEFAULT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `payment_status` enum('Unpaid','Paid','Refunded') DEFAULT 'Unpaid',
+  `payment_method` enum('MTN MoMo','Airtel Money','Cash','Visa','Flutterwave') DEFAULT NULL,
+  `delivery_status` enum('Pending','Assigned','Picked Up','In Transit','Delivered','Cancelled') DEFAULT 'Pending',
+  `tracking_id` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `current_location` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `courier_bookings`
+--
+
+INSERT INTO `courier_bookings` (`id`, `customer_id`, `driver_id`, `vehicle_id`, `pickup_address`, `dropoff_address`, `pickup_coords`, `dropoff_coords`, `is_surprise`, `receiver_name`, `receiver_phone`, `special_instructions`, `parcel_items`, `estimated_distance_km`, `estimated_delivery_time`, `total_price`, `payment_status`, `payment_method`, `delivery_status`, `tracking_id`, `created_at`, `current_location`) VALUES
+(1, 2, 4, 1, 'Kampala – Ntinda', 'Entebbe Airport', NULL, NULL, 0, NULL, NULL, 'Handle with care', 'Documents', NULL, NULL, 12000.00, 'Paid', 'MTN MoMo', 'In Transit', 'ZULA-TEST001', '2026-01-05 15:29:44', NULL),
+(2, 3, NULL, 3, 'Makerere University', 'Bugolobi', NULL, NULL, 1, 'Mary', '0700554433', 'Surprise delivery, call before arrival', 'Birthday Gift', NULL, NULL, 30000.00, 'Unpaid', 'Cash', 'Pending', 'ZULA-TEST002', '2026-01-05 15:29:44', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courier_fleet`
+--
+
+CREATE TABLE `courier_fleet` (
+  `id` int(11) NOT NULL,
+  `vehicle_name` varchar(100) NOT NULL,
+  `vehicle_category` enum('Motorcycle','Car','Truck','Regional') NOT NULL,
+  `base_fare` decimal(10,2) NOT NULL,
+  `price_per_km` decimal(10,2) NOT NULL,
+  `max_weight_kg` int(11) DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `is_available` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `courier_fleet`
+--
+
+INSERT INTO `courier_fleet` (`id`, `vehicle_name`, `vehicle_category`, `base_fare`, `price_per_km`, `max_weight_kg`, `image_url`, `is_available`) VALUES
+(1, 'Boda Boda', 'Motorcycle', 5000.00, 1500.00, 20, '/assets/fleet/boda.jpg', 1),
+(2, 'Motorcycle Express', 'Motorcycle', 7000.00, 1800.00, 25, '/assets/fleet/motorbike.jpg', 1),
+(3, 'City Car', 'Car', 15000.00, 3000.00, 100, '/assets/fleet/car.jpg', 1),
+(4, 'Van Delivery', 'Car', 25000.00, 4500.00, 500, '/assets/fleet/van.jpg', 1),
+(5, 'Pickup Truck', 'Truck', 35000.00, 6000.00, 1000, '/assets/fleet/pickup.jpg', 1),
+(6, 'Trailer / Cargo Truck', 'Regional', 60000.00, 10000.00, 5000, '/assets/fleet/trailer.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courier_tracking`
+--
+
+CREATE TABLE `courier_tracking` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `status_update` varchar(255) NOT NULL,
+  `current_location` text DEFAULT NULL,
+  `update_time` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `courier_tracking`
+--
+
+INSERT INTO `courier_tracking` (`id`, `booking_id`, `status_update`, `current_location`, `update_time`) VALUES
+(1, 1, 'Package picked up', 'Ntinda', '2026-01-05 15:30:25'),
+(2, 1, 'In transit', 'Entebbe Road', '2026-01-05 15:30:25'),
+(3, 2, 'Booking created', 'System', '2026-01-05 15:30:25');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `courier_users`
+--
+
+CREATE TABLE `courier_users` (
+  `id` int(11) NOT NULL,
+  `full_name` varchar(255) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `user_role` enum('admin','customer','driver') DEFAULT 'customer',
+  `vehicle_id` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `email_verified` tinyint(1) DEFAULT 0,
+  `last_login` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `courier_users`
+--
+
+INSERT INTO `courier_users` (`id`, `full_name`, `email`, `password`, `phone`, `user_role`, `vehicle_id`, `is_active`, `email_verified`, `last_login`, `created_at`) VALUES
+(1, 'Admin User', 'admin@zula.com', '$2b$10$hashedpassword', '0774488956', 'admin', NULL, 1, 0, NULL, '2026-01-05 15:27:14'),
+(2, 'John Customer', 'john@example.com', '$2b$10$hashedpassword', '0700123456', 'customer', NULL, 1, 0, NULL, '2026-01-05 15:27:14'),
+(3, 'Sarah Customer', 'sarah@example.com', '$2b$10$hashedpassword', '0700654321', 'customer', NULL, 1, 0, NULL, '2026-01-05 15:27:14'),
+(4, 'Moses Rider', 'kasolo@zula.com', '$2b$10$hashedpassword', '0700789123', 'driver', 1, 1, 0, NULL, '2026-01-05 15:27:14'),
+(5, 'Peter Rider', 'sseguya@zula.com', '$2b$10$hashedpassword', '0700998877', 'driver', 2, 1, 0, NULL, '2026-01-05 15:27:14');
 
 -- --------------------------------------------------------
 
@@ -327,7 +473,22 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`id`, `role_name`) VALUES
 (1, 'admin'),
-(2, 'customer');
+(2, 'customer'),
+(5, 'driver');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `surprise`
+--
+
+CREATE TABLE `surprise` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `includes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`includes`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -400,6 +561,12 @@ ALTER TABLE `bookings`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `booking_audit`
+--
+ALTER TABLE `booking_audit`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `booking_items`
 --
 ALTER TABLE `booking_items`
@@ -412,7 +579,8 @@ ALTER TABLE `booking_items`
 ALTER TABLE `cars`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `plate_number` (`plate_number`),
-  ADD KEY `destination_id` (`destination_id`);
+  ADD KEY `destination_id` (`destination_id`),
+  ADD KEY `idx_cars_available` (`is_available`,`category`);
 
 --
 -- Indexes for table `car_bookings`
@@ -435,6 +603,41 @@ ALTER TABLE `car_hire_options`
 ALTER TABLE `car_hire_rates`
   ADD PRIMARY KEY (`id`),
   ADD KEY `car_id` (`car_id`);
+
+--
+-- Indexes for table `courier_bookings`
+--
+ALTER TABLE `courier_bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `tracking_id` (`tracking_id`),
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `vehicle_id` (`vehicle_id`),
+  ADD KEY `idx_courier_bookings_status` (`delivery_status`,`created_at`),
+  ADD KEY `courier_bookings_driver_fk` (`driver_id`),
+  ADD KEY `idx_delivery_status` (`delivery_status`),
+  ADD KEY `idx_created_at` (`created_at`);
+
+--
+-- Indexes for table `courier_fleet`
+--
+ALTER TABLE `courier_fleet`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `courier_tracking`
+--
+ALTER TABLE `courier_tracking`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_tracking_booking` (`booking_id`);
+
+--
+-- Indexes for table `courier_users`
+--
+ALTER TABLE `courier_users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `fk_courier_users_vehicle` (`vehicle_id`),
+  ADD KEY `idx_courier_users_role` (`user_role`,`is_active`);
 
 --
 -- Indexes for table `destinations`
@@ -486,6 +689,12 @@ ALTER TABLE `roles`
   ADD UNIQUE KEY `role_name` (`role_name`);
 
 --
+-- Indexes for table `surprise`
+--
+ALTER TABLE `surprise`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tour_packages`
 --
 ALTER TABLE `tour_packages`
@@ -519,6 +728,12 @@ ALTER TABLE `bookings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `booking_audit`
+--
+ALTER TABLE `booking_audit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `booking_items`
 --
 ALTER TABLE `booking_items`
@@ -546,6 +761,30 @@ ALTER TABLE `car_hire_options`
 -- AUTO_INCREMENT for table `car_hire_rates`
 --
 ALTER TABLE `car_hire_rates`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `courier_bookings`
+--
+ALTER TABLE `courier_bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `courier_fleet`
+--
+ALTER TABLE `courier_fleet`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `courier_tracking`
+--
+ALTER TABLE `courier_tracking`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `courier_users`
+--
+ALTER TABLE `courier_users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
@@ -588,7 +827,13 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `surprise`
+--
+ALTER TABLE `surprise`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tour_packages`
@@ -636,13 +881,35 @@ ALTER TABLE `cars`
 ALTER TABLE `car_bookings`
   ADD CONSTRAINT `car_bookings_ibfk_1` FOREIGN KEY (`booking_item_id`) REFERENCES `booking_items` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `car_bookings_ibfk_2` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
-  ADD CONSTRAINT `car_bookings_ibfk_3` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`);
+  ADD CONSTRAINT `car_bookings_ibfk_3` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`),
+  ADD CONSTRAINT `fk_car_bookings_cars` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `car_hire_rates`
 --
 ALTER TABLE `car_hire_rates`
   ADD CONSTRAINT `car_hire_rates_ibfk_1` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`);
+
+--
+-- Constraints for table `courier_bookings`
+--
+ALTER TABLE `courier_bookings`
+  ADD CONSTRAINT `courier_bookings_driver_fk` FOREIGN KEY (`driver_id`) REFERENCES `courier_users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `courier_bookings_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `courier_users` (`id`),
+  ADD CONSTRAINT `courier_bookings_ibfk_2` FOREIGN KEY (`vehicle_id`) REFERENCES `courier_fleet` (`id`),
+  ADD CONSTRAINT `fk_courier_bookings_driver` FOREIGN KEY (`driver_id`) REFERENCES `courier_users` (`id`);
+
+--
+-- Constraints for table `courier_tracking`
+--
+ALTER TABLE `courier_tracking`
+  ADD CONSTRAINT `courier_tracking_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `courier_bookings` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `courier_users`
+--
+ALTER TABLE `courier_users`
+  ADD CONSTRAINT `fk_courier_users_vehicle` FOREIGN KEY (`vehicle_id`) REFERENCES `courier_fleet` (`id`);
 
 --
 -- Constraints for table `flights`

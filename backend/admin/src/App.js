@@ -26,6 +26,8 @@ import {
 /* Payments */
 import { PaymentsList, PaymentsEdit } from "./payments";
 
+import { CourierList, CourierEdit } from "./courier";
+
 /* Menu */
 import MyMenu from "./MyMenu";
 
@@ -84,6 +86,14 @@ const App = () => (
       list={PaymentsList}
       edit={PaymentsEdit}
     />
+
+
+    <Resource
+      name="courier_bookings"
+      list={CourierList}
+      edit={CourierEdit}
+    />
+
   </Admin>
 );
 

@@ -16,6 +16,8 @@ const flightRoutes = require("./routes/flights");
 const userRoutes = require("./routes/users");
 const bookingRoutes = require("./routes/bookings");
 const hotelRoutes = require("./routes/hotels");
+const courierRoutes = require("./routes/courier");
+
 
 const app = express();
 

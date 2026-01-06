@@ -1,124 +1,77 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-  FaPhoneAlt,
-  FaEnvelope,
-  FaGlobe,
-  FaMapMarkerAlt,
+  FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn,
+  FaPhoneAlt, FaEnvelope, FaMapMarkerAlt,
+  FaPlane, FaHotel, FaTruck, FaCar, FaCalendarAlt
 } from "react-icons/fa";
 import "../styles/Footer.css";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer-content">
-          {/* Company Info */}
-          <div className="footer-section company-info">
-            <h3>Zula Travels</h3>
-            <p>
-              Your trusted partner for unforgettable travel experiences across
-              Uganda and East Africa. We provide premium travel, tour, and
-              logistics services with passion and professionalism.
-            </p>
+        <div className="footer-grid">
 
-            <div className="social-links">
-              <a
-                href="https://facebook.com/zulatravels"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-              >
-                <FaFacebookF />
-              </a>
-              <a
-                href="https://twitter.com/zulatravels"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Twitter"
-              >
-                <FaTwitter />
-              </a>
-              <a
-                href="https://instagram.com/zulatravels"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="https://linkedin.com/company/zulatravels"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-              >
-                <FaLinkedinIn />
-              </a>
+          {/* Brand Column */}
+          <div className="footer-col brand-col">
+            <h3 className="footer-logo">Zula<span>Travels</span></h3>
+            <p className="brand-text">
+              Premium travel and logistics across East Africa. Professionalism in every journey.
+            </p>
+            <div className="social-grid">
+              <a href="#" aria-label="Facebook"><FaFacebookF /></a>
+              <a href="#" aria-label="Twitter"><FaTwitter /></a>
+              <a href="#" aria-label="Instagram"><FaInstagram /></a>
+              <a href="#" aria-label="LinkedIn"><FaLinkedinIn /></a>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div className="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-              <li><Link to="/">Home</Link></li>
+          <div className="footer-col">
+            <h4>Explore</h4>
+            <ul className="footer-links">
               <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/services">Services</Link></li>
               <li><Link to="/packages">Tour Packages</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
+              <li><Link to="/contact">Get in Touch</Link></li>
+              <li><Link to="/privacy">Privacy Policy</Link></li>
             </ul>
           </div>
 
-          {/* Our Services */}
-          <div className="footer-section">
+          {/* Services with Icons */}
+          <div className="footer-col">
             <h4>Our Services</h4>
-            <ul>
-              <li><Link to="/flights">Flight Booking</Link></li>
-              <li><Link to="/hotels">Hotel Reservations</Link></li>
-              <li><Link to="/courier">Courier Services</Link></li>
-              <li><Link to="/cars">Car Rentals</Link></li>
-              <li><Link to="/events">Events & Venues</Link></li>
+            <ul className="footer-services">
+              <li><FaPlane className="svc-icon" /><Link to="/flights">Flight Booking</Link></li>
+              <li><FaHotel className="svc-icon" /><Link to="/hotels">Hotel Reservations</Link></li>
+              <li><FaTruck className="svc-icon" /><Link to="/courier">Courier Services</Link></li>
+              <li><FaCar className="svc-icon" /><Link to="/cars">Car Rentals</Link></li>
+              <li><FaCalendarAlt className="svc-icon" /><Link to="/events">Events & Venues</Link></li>
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div className="footer-section contact-info">
-            <h4>Contact Info</h4>
-            <div className="contact-item">
-              <FaMapMarkerAlt />
-              <p>Kampala, Uganda</p>
-            </div>
-            <div className="contact-item">
-              <FaPhoneAlt />
-              <p>0393 256 310 | 0774 488 956 | 0703 936 165</p>
-            </div>
-            <div className="contact-item">
-              <FaEnvelope />
-              <p>
-                info@zulatravels.com <br />
-                zulatravels@gmail.com
-              </p>
-            </div>
-            <div className="contact-item">
-              <FaGlobe />
-              <p>www.zulatravels.com</p>
+          {/* Contact Column */}
+          <div className="footer-col">
+            <h4>Contact</h4>
+            <div className="contact-compact">
+              <div className="contact-item">
+                <FaMapMarkerAlt /> <span>Kampala, Uganda</span>
+              </div>
+              <div className="contact-item">
+                <FaPhoneAlt /> <span>+256 393 256 310</span>
+              </div>
+              <div className="contact-item">
+                <FaEnvelope /> <span>info@zulatravels.com</span>
+              </div>
             </div>
           </div>
+
         </div>
 
-        {/* Footer Bottom */}
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Zula Travels. All rights reserved.</p>
-          <div className="footer-links">
-            <Link to="/privacy">Privacy Policy</Link>
-            <Link to="/terms">Terms of Service</Link>
-            <Link to="/cookies">Cookies</Link>
-          </div>
+          <p>&copy; {currentYear} Zula Travels. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -15,7 +15,7 @@ import Flights from "./pages/Flights/Flights";
 import Hotels from "./pages/Hotels";
 import HotelDetails from "./pages/HotelDetails";
 import Courier from "./pages/Courier";
-import Cars from "./pages/Cars";
+import Cars from "./pages/CarHire";
 import Venues from "./pages/Venues";
 import Contact from "./pages/Contact";
 import Services from "./pages/Services";

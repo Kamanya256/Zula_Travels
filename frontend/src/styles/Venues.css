@@ -1,174 +1,308 @@
-.venues-page {
-  font-family: "Poppins", sans-serif;
-  background-color: #f9f9f9;
-  color: #222;
-  padding-bottom: 40px;
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap');
+
+:root {
+  /* Zula Travels Brand Palette */
+  --primary: #0d9488;
+  /* Teal */
+  --primary-dark: #0f172a;
+  /* Navy */
+  --accent: #fbbf24;
+  /* Gold */
+  --bg-soft: #f8fafc;
+  /* Light Gray */
+  --white: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+
+  /* Modern UI Elements */
+  --radius: 16px;
+  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hero Section */
+.venues-container {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-soft);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* --- HERO SLIDER --- */
 .venues-hero {
+  height: 85vh;
   position: relative;
-  height: 70vh;
-  background: url("../assets/images/events/hero-bg.jpg") center/cover no-repeat;
+}
+
+.hero-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.hero-overlay {
+  background: linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.7));
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  color: white;
-}
-
-.venues-hero .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.55);
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
+  color: var(--white);
   padding: 0 20px;
 }
 
-.hero-content h1 {
-  font-size: 2.8rem;
+.hero-overlay h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.hero-content p {
-  font-size: 1.2rem;
-  max-width: 800px;
-  margin: 0 auto;
+/* --- CATEGORY FILTERS --- */
+.category-filter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 40px 20px;
+  background: var(--white);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Venue Categories */
-.venue-types {
-  padding: 60px 20px;
-  text-align: center;
+.category-filter button {
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: 1.5px solid #e2e8f0;
+  background: var(--white);
+  color: var(--text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-.venue-types h2 {
-  color: #0ea66a;
-  margin-bottom: 30px;
-  font-size: 2rem;
+.category-filter button.active,
+.category-filter button:hover {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+/* --- VENUE GRID --- */
+.venue-grid-section {
+  max-width: 1300px;
+  margin: 60px auto;
+  padding: 0 25px;
 }
 
 .venue-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-  max-width: 1100px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 35px;
 }
 
 .venue-card {
-  background: #fff;
-  border-radius: 12px;
+  background: var(--white);
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  border: 1px solid #f1f5f9;
 }
 
 .venue-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
 }
 
-.venue-card img {
+.venue-img-container {
+  position: relative;
+  height: 240px;
+}
+
+.venue-img-container img {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
 }
 
-.venue-card .venue-content {
-  padding: 20px;
-}
-
-.venue-card h3 {
-  margin-bottom: 8px;
-  color: #0ea66a;
-}
-
-.venue-card p {
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.icon {
+/* Safari Compatibility Fix for Blur */
+.venue-type-tag {
   position: absolute;
   top: 15px;
-  left: 15px;
-  background: #fff;
-  color: #0ea66a;
-  padding: 10px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  right: 15px;
+  background: rgba(13, 148, 136, 0.85);
+  color: var(--white);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  -webkit-backdrop-filter: blur(8px);
+  /* Safari Support */
+  backdrop-filter: blur(8px);
 }
 
-/* Buttons */
+.venue-info {
+  padding: 25px;
+}
+
+.venue-info h3 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.venue-specs {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  padding: 15px 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 20px;
+}
+
+.venue-specs span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* --- BUTTONS & ACTIONS --- */
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .btn-book {
-  background-color: #0ea66a;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  background: var(--primary);
+  color: var(--white);
+  padding: 12px 28px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
 }
 
 .btn-book:hover {
-  background-color: #056e45;
+  background: var(--primary-dark);
+  box-shadow: 0 8px 15px rgba(13, 148, 136, 0.2);
 }
 
-/* CTA Section */
-.venue-cta {
+.sub-links {
+  display: flex;
+  gap: 15px;
+}
+
+.sub-links a {
+  color: var(--text-muted);
+  font-size: 1.3rem;
+  transition: var(--transition);
+}
+
+.sub-links a:hover {
+  color: var(--primary);
+  transform: scale(1.15);
+}
+
+/* --- WHY US SECTION --- */
+.why-us {
+  background: var(--primary-dark);
+  color: var(--white);
+  padding: 100px 20px;
   text-align: center;
-  background: linear-gradient(120deg, #0ea66a, #024b2a);
-  color: #fff;
-  padding: 70px 20px;
-  border-radius: 12px;
-  margin: 40px auto 0;
-  max-width: 1100px;
 }
 
-.venue-cta h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 50px;
+  max-width: 1200px;
+  margin: 60px auto 0;
 }
 
-.venue-cta p {
-  max-width: 800px;
-  margin: 0 auto 25px;
-  line-height: 1.6;
+.benefit h4 {
+  font-size: 1.5rem;
+  margin: 15px 0;
+  color: var(--accent);
 }
 
-.btn-contact {
-  background: #fff;
-  color: #0ea66a;
-  padding: 12px 28px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
+.benefit p {
+  color: #94a3b8;
+  line-height: 1.7;
 }
 
-.btn-contact:hover {
-  background: #024b2a;
-  color: #fff;
+/* --- PAYMENT LOGOS --- */
+.payment-partners {
+  padding: 80px 20px;
+  text-align: center;
+  background: var(--white);
 }
 
-/* Responsive */
+.partner-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.partner-logos img {
+  height: 45px;
+  filter: grayscale(1);
+  opacity: 0.6;
+  transition: var(--transition);
+}
+
+.partner-logos img:hover {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* --- RESPONSIVE --- */
 @media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 2rem;
+  .hero-overlay h1 {
+    font-size: 2.2rem;
   }
-  .venue-card img {
-    height: 150px;
+
+  .venue-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-filter {
+    gap: 8px;
+    padding: 20px 10px;
+  }
+
+  .category-filter button {
+    padding: 8px 16px;
+    font-size: 0.85rem;
   }
 }

@@ -1,53 +1,166 @@
-const express = require("express");
-const router = express.Router();
 const db = require("../db");
 
-/* GET all cars */
-router.get("/", (req, res) => {
-    db.query("SELECT * FROM cars", (err, rows) => {
-        if (err) return res.status(500).json(err);
-        res.json(rows);
-    });
-});
+const Car = {
+    getAll: (callback) => {
+        const sql = `
+      SELECT 
+        id,
+        make,
+        model,
+        year,
+        seating_capacity,
+        transmission,
+        description,
+        image_url,
+        is_available,
+        plate_number,
+        category,
+        base_rate_per_day,
+        available_quantity,
+        fuel_type,
+        engine_capacity,
+        features
+      FROM cars
+      WHERE is_available = 1
+      ORDER BY created_at DESC
+    `;
+        db.query(sql, callback);
+    },
 
-/* GET one car */
-router.get("/:id", (req, res) => {
-    db.query(
-        "SELECT * FROM cars WHERE id=?",
-        [req.params.id],
-        (err, rows) => {
-            if (err) return res.status(500).json(err);
-            res.json(rows[0]);
+    getByMake: (make, callback) => {
+        const sql = `
+      SELECT 
+        id,
+        make,
+        model,
+        year,
+        seating_capacity,
+        transmission,
+        description,
+        image_url,
+        is_available,
+        plate_number,
+        category,
+        base_rate_per_day,
+        available_quantity,
+        fuel_type,
+        engine_capacity,
+        features
+      FROM cars
+      WHERE make = ? AND is_available = 1
+      ORDER BY created_at DESC
+    `;
+        db.query(sql, [make], callback);
+    },
+
+    getByCategory: (category, callback) => {
+        const sql = `
+      SELECT 
+        id,
+        make,
+        model,
+        year,
+        seating_capacity,
+        transmission,
+        description,
+        image_url,
+        is_available,
+        plate_number,
+        category,
+        base_rate_per_day,
+        available_quantity,
+        fuel_type,
+        engine_capacity,
+        features
+      FROM cars
+      WHERE category = ? AND is_available = 1
+      ORDER BY created_at DESC
+    `;
+        db.query(sql, [category], callback);
+    },
+
+    searchAvailable: (filters, callback) => {
+        let sql = `
+      SELECT 
+        id,
+        make,
+        model,
+        year,
+        seating_capacity,
+        transmission,
+        description,
+        image_url,
+        is_available,
+        plate_number,
+        category,
+        base_rate_per_day,
+        available_quantity,
+        fuel_type,
+        engine_capacity,
+        features
+      FROM cars
+      WHERE is_available = 1
+    `;
+
+        const params = [];
+
+        // Add filters if provided
+        if (filters.category && filters.category !== 'All') {
+            sql += ' AND category = ?';
+            params.push(filters.category);
         }
-    );
-});
 
-/* CREATE car */
-router.post("/", (req, res) => {
-    db.query("INSERT INTO cars SET ?", req.body, (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json({ id: result.insertId, ...req.body });
-    });
-});
-
-/* UPDATE car */
-router.put("/:id", (req, res) => {
-    db.query(
-        "UPDATE cars SET ? WHERE id=?",
-        [req.body, req.params.id],
-        err => {
-            if (err) return res.status(500).json(err);
-            res.json({ id: req.params.id, ...req.body });
+        if (filters.make && filters.make !== 'All') {
+            sql += ' AND make = ?';
+            params.push(filters.make);
         }
-    );
-});
 
-/* DELETE car */
-router.delete("/:id", (req, res) => {
-    db.query("DELETE FROM cars WHERE id=?", [req.params.id], err => {
-        if (err) return res.status(500).json(err);
-        res.json({ id: req.params.id });
-    });
-});
+        if (filters.quantity) {
+            sql += ' AND available_quantity >= ?';
+            params.push(filters.quantity);
+        }
 
-module.exports = router;
+        sql += ' ORDER BY created_at DESC';
+
+        db.query(sql, params, callback);
+    },
+
+    getById: (id, callback) => {
+        const sql = `
+      SELECT 
+        id,
+        make,
+        model,
+        year,
+        seating_capacity,
+        transmission,
+        description,
+        image_url,
+        is_available,
+        plate_number,
+        category,
+        base_rate_per_day,
+        available_quantity,
+        fuel_type,
+        engine_capacity,
+        features
+      FROM cars
+      WHERE id = ? AND is_available = 1
+    `;
+        db.query(sql, [id], callback);
+    },
+
+    // Optional: Update availability
+    updateAvailability: (id, available_quantity, callback) => {
+        const sql = `
+      UPDATE cars 
+      SET available_quantity = ?, 
+          is_available = ?
+      WHERE id = ?
+    `;
+        const is_available = available_quantity > 0 ? 1 : 0;
+        db.query(sql, [available_quantity, is_available, id], callback);
+    }
+};
+
+module.exports = Car;

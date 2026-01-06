@@ -1,85 +1,156 @@
-import React from "react";
-import "../styles/Venues.css";
-import { FaRing, FaBuilding, FaUsers, FaTree } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade, Navigation } from "swiper/modules";
+import { FaUsers, FaMoneyBillWave, FaMapMarkerAlt, FaCheckCircle, FaCar, FaHotel, FaGlassCheers, FaUtensils } from "react-icons/fa";
 
-import wedding from "../assets/images/events/wedding.jpg";
-import corporate from "../assets/images/events/corporate.jpg";
-import conference from "../assets/images/events/conference.jpg";
-import outdoor from "../assets/images/events/outdoor.jpg";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/navigation";
+import "../styles/Venues.css";
 
 export default function Venues() {
-  const eventTypes = [
-    {
-      icon: <FaRing />,
-      title: "Wedding Venues",
-      img: wedding,
-      description:
-        "Elegant gardens, luxury hotels, and lake-view resorts perfect for weddings and receptions across Uganda and East Africa.",
-    },
-    {
-      icon: <FaBuilding />,
-      title: "Corporate Parties",
-      img: corporate,
-      description:
-        "Professional spaces for company parties, award nights, and staff retreats with full catering and decor services.",
-    },
-    {
-      icon: <FaUsers />,
-      title: "Conferences & Meetings",
-      img: conference,
-      description:
-        "Book conference halls, seminar centers, and business hotels with projectors, Wi-Fi, and seating capacity up to 1000 guests.",
-    },
-    {
-      icon: <FaTree />,
-      title: "Outdoor Venues",
-      img: outdoor,
-      description:
-        "Nature-inspired gardens, beaches, and open lawns suitable for birthdays, cultural events, and community gatherings.",
-    },
-  ];
+  const [venues, setVenues] = useState([]);
+  const [filteredVenues, setFilteredVenues] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  useEffect(() => {
+    // Fetches venues and optionally joins with hotels/cars in backend
+    axios.get("http://localhost:5000/api/venues")
+      .then(res => {
+        setVenues(res.data);
+        setFilteredVenues(res.data);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  const categories = ["All", "Luxury", "Moderate", "Ordinary", "Gardens", "Hotels", "Bars", "Restaurants", "Rooftops"];
+
+  const filterCategory = (cat) => {
+    setActiveCategory(cat);
+    if (cat === "All") {
+      setFilteredVenues(venues);
+    } else {
+      setFilteredVenues(venues.filter(v => v.venue_type.toLowerCase().includes(cat.toLowerCase())));
+    }
+  };
 
   return (
-    <div className="venues-page">
-      {/* Hero section */}
-      <header className="venues-hero">
-        <div className="overlay"></div>
-        <div className="hero-content">
-          <h1>Event Venues & Bookings</h1>
-          <p>
-            Find and book perfect venues for weddings, conferences, and private events — all in one place.
-          </p>
-        </div>
-      </header>
-
-      {/* Event Types */}
-      <section className="venue-types">
-        <h2>Explore Our Event Categories</h2>
-        <div className="venue-grid">
-          {eventTypes.map((event, i) => (
-            <div className="venue-card" key={i}>
-              <div className="icon">{event.icon}</div>
-              <img src={event.img} alt={event.title} />
-              <div className="venue-content">
-                <h3>{event.title}</h3>
-                <p>{event.description}</p>
-                <button className="btn-book">Book Now</button>
-              </div>
+    <div className="venues-container">
+      {/* 1. Hero Slider */}
+      <section className="venues-hero">
+        <Swiper
+          modules={[Autoplay, EffectFade, Navigation]}
+          effect="fade"
+          navigation
+          autoplay={{ delay: 5000 }}
+          className="hero-swiper"
+        >
+          <SwiperSlide className="slide s1">
+            <div className="hero-overlay">
+              <h1>Luxury Wedding Gardens</h1>
+              <p>Breath-taking scenery for your special day.</p>
+              <button className="btn-main">Explore More</button>
             </div>
-          ))}
+          </SwiperSlide>
+          <SwiperSlide className="slide s2">
+            <div className="hero-overlay">
+              <h1>Professional Conferences</h1>
+              <p>Modern halls for corporate excellence.</p>
+              <button className="btn-main">Book Now</button>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </section>
+
+      {/* 2. Category Filter Bar */}
+      <div className="category-filter">
+        {categories.map(cat => (
+          <button
+            key={cat}
+            className={activeCategory === cat ? "active" : ""}
+            onClick={() => filterCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* 3. Dynamic Venue Grid */}
+      <section className="venue-grid-section">
+        <div className="container">
+          <div className="section-title">
+            <h2>{activeCategory} Spaces</h2>
+            <div className="underline"></div>
+          </div>
+
+          <div className="venue-grid">
+            {filteredVenues.map((venue) => (
+              <div key={venue.id} className="venue-card">
+                <div className="venue-img-container">
+                  <img src={`/assets/images/Events/venue-${venue.id}.jpg`} alt={venue.name} />
+                  <span className="venue-type-tag">{venue.venue_type}</span>
+                </div>
+
+                <div className="venue-info">
+                  <h3>{venue.name}</h3>
+                  <p className="location"><FaMapMarkerAlt /> {venue.location || "Kampala, Uganda"}</p>
+
+                  <div className="venue-specs">
+                    <span><FaUsers /> Max: {venue.capacity}</span>
+                    <span><FaMoneyBillWave /> {venue.currency} {venue.price_per_day}/day</span>
+                  </div>
+
+                  <div className="card-actions">
+                    <Link to={`/booking/events/${venue.id}`} className="btn-book">Book Event</Link>
+                    <div className="sub-links">
+                      <Link to={`/hotel/${venue.destination_id}`} title="Connected Hotel"><FaHotel /></Link>
+                      <Link to={`/cars`} title="Book Transport"><FaCar /></Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="venue-cta">
-        <h2>Host Your Next Event with Confidence</h2>
-        <p>
-          From venue selection to setup, Zula Travels ensures every event is seamless.  
-          Talk to our event specialists today to plan your next memorable experience.
-        </p>
-        <a href="/contact" className="btn-contact">
-          Contact Us
-        </a>
+      {/* 4. Why Choose Us */}
+      <section className="why-us">
+        <div className="container">
+          <h2>Why Choose Zula Travels?</h2>
+          <div className="benefits-grid">
+            <div className="benefit">
+              <FaCheckCircle className="icon" />
+              <h4>Verified Venues</h4>
+              <p>Every 5-star and moderate venue is physically inspected for quality.</p>
+            </div>
+            <div className="benefit">
+              <FaCheckCircle className="icon" />
+              <h4>End-to-End Logistics</h4>
+              <p>We connect your venue with luxury car rentals and hotel stays.</p>
+            </div>
+            <div className="benefit">
+              <FaCheckCircle className="icon" />
+              <h4>Best Price Guarantee</h4>
+              <p>Professional negotiation to ensure you get ordinary prices for luxury spaces.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Payment Partners */}
+      <section className="payment-partners">
+        <h3>Secure Payment Options</h3>
+        <div className="partner-logos">
+          <img src="/assets/images/payments/mtn-momo.png" alt="MTN" />
+          <img src="/assets/images/payments/airtel-money.png" alt="Airtel" />
+          <img src="/assets/images/payments/visa.png" alt="Visa" />
+          <img src="/assets/images/payments/paypal.png" alt="PayPal" />
+          <img src="/assets/images/payments/flutterwave.png" alt="Flutterwave" />
+        </div>
       </section>
     </div>
   );
